@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OnlyIPTV - Selección de Modelos</title>
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <h1>🎬 OnlyIPTV</h1>
+    <p>Selecciona los modelos para generar un link compatible con VLC:</p>
+    <div class="checkboxes">
+      <label><input type="checkbox" id="modelo1" value="modelo1"> Modelo 1</label>
+      <label><input type="checkbox" id="modelo2" value="modelo2"> Modelo 2</label>
+    </div>
+    <button onclick="generateLink()">🎥 Generar enlace para VLC</button>
+    <div id="output" class="output"></div>
+  </div>
 
+  <script>
+    function generateLink() {
+      const m1 = document.getElementById("modelo1").checked;
+      const m2 = document.getElementById("modelo2").checked;
+      let url = "";
+
+      if (m1 && m2) {
+        url = "full.m3u";
+      } else if (m1) {
+        url = "modelo1.m3u";
+      } else if (m2) {
+        url = "modelo2.m3u";
+      } else {
+        document.getElementById("output").innerHTML = "<p style='color:red;'>Selecciona al menos un modelo.</p>";
+        return;
+      }
+
+      const fullUrl = window.location.href.replace("index.html", "") + url;
+      document.getElementById("output").innerHTML = `
+        <p>🎯 Copia y pega este enlace en VLC:</p>
+        <input type="text" value="${fullUrl}" readonly onclick="this.select()">
+      `;
+    }
+  </script>
+</body>
+</html>
