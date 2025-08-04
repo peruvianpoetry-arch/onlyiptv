@@ -1,35 +1,54 @@
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("modelos.json")
-    .then((res) => res.json())
-    .then((modelos) => {
-      const container = document.getElementById("modelos-container");
 
-      modelos.forEach((modelo) => {
-        const card = document.createElement("div");
-        card.className = "modelo-card";
-
-        const img = document.createElement("img");
-        img.src = modelo.imagen || "https://via.placeholder.com/240x180?text=OnlyIPTV";
-        img.alt = modelo.nombre;
-
-        const info = document.createElement("div");
-        info.className = "modelo-info";
-
-        info.innerHTML = `
-          <h3>${modelo.nombre}</h3>
-          <p><strong>País:</strong> ${modelo.pais}</p>
-          <p><strong>Categoría:</strong> ${modelo.categoria}</p>
-          <p><strong>Seguidores:</strong> ${modelo.seguidores}</p>
-          <p><strong>Media:</strong> ${modelo.media}</p>
-          <p><a href="${modelo.link}" target="_blank">Ver perfil</a></p>
-        `;
-
-        card.appendChild(img);
-        card.appendChild(info);
-        container.appendChild(card);
-      });
-    })
-    .catch((err) => {
-      console.error("Error al cargar modelos.json:", err);
+const modelos = [];
+for (let i = 1; i <= 1000; i++) {
+    let pais = "Sudamérica";
+    if (i <= 200) pais = "Sudamérica";
+    else if (i <= 400) pais = "Centroamérica";
+    else if (i <= 600) pais = "Norteamérica";
+    else if (i <= 800) pais = "Europa";
+    else if (i <= 900) pais = "Asia";
+    else pais = "Oceanía";
+    modelos.push({
+        id: "modelo" + i,
+        nombre: "Modelo " + i,
+        pais: pais,
+        imagen: "assets/siluetas/silueta.png"
     });
-});
+}
+
+const grid = document.getElementById("grid-modelos");
+const seleccionados = [];
+
+function cargarModelos() {
+    grid.innerHTML = "";
+    modelos.forEach((m) => {
+        const div = document.createElement("div");
+        div.classList.add("modelo");
+        div.innerHTML = `<img src="${m.imagen}" alt="modelo"/><p>${m.nombre}</p>`;
+        div.onclick = () => seleccionar(div, m.id);
+        grid.appendChild(div);
+    });
+}
+
+function seleccionar(div, id) {
+    if (seleccionados.includes(id)) {
+        div.classList.remove("selected");
+        const idx = seleccionados.indexOf(id);
+        seleccionados.splice(idx, 1);
+    } else {
+        div.classList.add("selected");
+        seleccionados.push(id);
+    }
+}
+
+function generarLink() {
+    if (seleccionados.length === 0) {
+        alert("No has seleccionado ningún modelo.");
+        return;
+    }
+    const link = "https://onlyiptv.netlify.app/watch?id=" + seleccionados.join("-");
+    alert("Tu link personalizado:
+" + link);
+}
+
+window.onload = cargarModelos;
